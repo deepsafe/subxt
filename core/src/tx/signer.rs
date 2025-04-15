@@ -27,7 +27,7 @@ pub trait Signer<T: Config> {
 
 cfg_substrate_compat! {
     pub use pair_signer::PairSigner;
-    pub use bool_signer::BoolSigner;
+    pub use deepsafe_signer::DeepSafeSigner;
 }
 
 // A signer suitable for substrate based chains. This provides compatibility with Substrate
@@ -102,7 +102,7 @@ mod pair_signer {
 
 // bool account system about evm, specific msg hash and signer to sign
 #[cfg(feature = "substrate-compat")]
-mod bool_signer {
+mod deepsafe_signer {
     use super::Signer;
     use crate::Config;
     pub use secp256k1::{PublicKey, SecretKey, sign as secp_sign, Message};
@@ -111,11 +111,11 @@ mod bool_signer {
     };
     /// A [`Signer`] implementation that can be constructed from an [`sp_core::Pair`].
     #[derive(Clone, Debug)]
-    pub struct BoolSigner<T: Config> {
+    pub struct DeepSafeSigner<T: Config> {
         account_id: T::AccountId,
         signer: SecretKey,
     }
-    impl<T> BoolSigner<T>
+    impl<T> DeepSafeSigner<T>
         where
             T: Config,
             T::Signature: sp_runtime::traits::Verify,
@@ -139,7 +139,7 @@ mod bool_signer {
             &self.account_id
         }
     }
-    impl<T> Signer<T> for BoolSigner<T>
+    impl<T> Signer<T> for DeepSafeSigner<T>
         where
             T: Config,
             T::Signature: From<sp_core::ecdsa::Signature>,
